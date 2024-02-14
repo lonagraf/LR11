@@ -12,10 +12,9 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.Objects;
+public class AddEditEmployeeActivity extends AppCompatActivity {
 
-public class AddEmployeeActivity extends AppCompatActivity {
-
+    public static final String EXTRA_ID = "com.example.lr11.EXTRA_ID";
     public static final String EXTRA_NAME = "com.example.lr11.EXTRA_NAME";
     public static final String EXTRA_DEPARTMENT = "com.example.lr11.EXTRA_DEPARTMENT";
     public static final String EXTRA_POSITION = "com.example.lr11.EXTRA_POSITION";
@@ -38,7 +37,16 @@ public class AddEmployeeActivity extends AppCompatActivity {
         if (actionBar != null) {
             // Вы можете настроить ActionBar, например, установить кастомный значок
             actionBar.setHomeAsUpIndicator(R.drawable.close);
-            actionBar.setTitle("Add Employee");
+
+            Intent intent = getIntent();
+            if (intent.hasExtra(EXTRA_ID)) {
+                setTitle("Редактирование сотрудника");
+                fullnameEdit.setText(intent.getStringExtra(EXTRA_NAME));
+                departmentEdit.setText(intent.getStringExtra(EXTRA_DEPARTMENT));
+                positionEdit.setText(intent.getStringExtra(EXTRA_POSITION));
+            } else {
+                actionBar.setTitle("Добавление сотрудника");
+            }
         }
     }
 
@@ -63,6 +71,11 @@ public class AddEmployeeActivity extends AppCompatActivity {
         data.putExtra(EXTRA_NAME, fullname);
         data.putExtra(EXTRA_DEPARTMENT, department);
         data.putExtra(EXTRA_POSITION, position);
+
+        int id = getIntent().getIntExtra(EXTRA_ID, -1);
+        if (id != -1) {
+            data.putExtra(EXTRA_ID, id);
+        }
 
         setResult(RESULT_OK, data);
         finish();

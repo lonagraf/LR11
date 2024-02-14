@@ -15,6 +15,7 @@ import java.util.List;
 public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.EmployeeHolder> {
 
     private List<Employee> employees = new ArrayList<>();
+    private OnItemClickListener listener;
 
     @NonNull
     @Override
@@ -48,6 +49,10 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
         notifyDataSetChanged();
     }
 
+    public Employee getEmployeeAt(int position) {
+        return employees.get(position);
+    }
+
     class EmployeeHolder extends RecyclerView.ViewHolder {
         private TextView fullName;
         private TextView department;
@@ -58,6 +63,24 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
             fullName = itemView.findViewById(R.id.fullname);
             department = itemView.findViewById(R.id.department);
             position = itemView.findViewById(R.id.position);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (listener != null && position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(employees.get(position));
+                    }
+                }
+            });
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Employee employee);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 }
